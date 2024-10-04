@@ -20,18 +20,27 @@ import "fmt"
 
 func main() {
 
+	fmt.Printf("\nFaibonacci 菲波那契數列=====\n")
 	fmt.Printf("countFibonacci() digit amount=%d, ans=%d\n", 10, countFibonacci(10))
 	fmt.Printf("countFibonacciByLoop() digit amount=%d, ans=%d\n", 6, countFibonacciByLoop(6))
 	printFibonacci(0, 10, 0, 0)
 
+	fmt.Printf("\nHanoi 河內塔=====\n")
 	plateNum := 4
-	fmt.Printf("\ntowerOfHanoiByTrick()========\n")
-	fmt.Printf("towerOfHanoiByTrick()======== 盤子數=%d,step=%d\n", plateNum, towerOfHanoiByTrick(plateNum, 'A', 'B', 'C'))
+	fmt.Printf("towerOfHanoiByTrick() 盤子數=%d,step=%d\n", plateNum, towerOfHanoiByTrick(plateNum, 'A', 'B', 'C'))
 	fmt.Printf("countStepOfTowerOfHanoiByFormula() 盤子數=%d,step=%d\n", plateNum, countStepOfTowerOfHanoiByFormula(plateNum))
 
+	fmt.Printf("\nGreatest Common Factor 最大公因數=====\n")
 	a, b := 546, 429
-	fmt.Printf("\ngreatestCommonFactor() a=%d,b=%d, ans=%d\n", a, b, greatestCommonFactor(a, b))
+	fmt.Printf("greatestCommonFactor() a=%d,b=%d, ans=%d\n", a, b, greatestCommonFactor(a, b))
 
+	//
+	fmt.Printf("\n從小推到大的問題，用遞迴思考=====\n")
+	n := 20
+	fmt.Printf("階乘：countFactorial() 階乘=%d!,ans=%d\n", n, countFactorial(n))
+	fmt.Printf("上台階有幾種走法：countUpStair() 台階數=%d,ans=%d\n", n, countUpStair(n))
+	k := 3
+	fmt.Printf("上台階有幾種走法：countUpStairByStepRange() 台階數=%d,每次走1-%d步，ans=%d\n", n, k, countUpStairByStepRange(n, k))
 }
 
 //這算法跟merge sort(歸併排序)一樣
@@ -130,3 +139,52 @@ func greatestCommonFactor(a, b int) int {
 
 //二元樹遍歷
 //二元樹結構不斷重複(也是規則重複)
+
+/*
+從小推到大的問題，
+試圖歸納法推導出公式的問題，
+要用遞迴思考！
+*/
+
+//階乘 n!
+func countFactorial(n int) int {
+	if n == 1 {
+		return 1
+	} else {
+		return n * countFactorial(n-1)
+	}
+}
+
+//有n台階，每次走1-2步，共有幾種走法？
+//這條件就是菲波那契數列
+//別的條件就不是了
+func countUpStair(n int) int {
+	if n < 3 {
+		return n
+		//n=0,return 0
+		//n=1,只有一種,return 1
+		//n=2,有兩種,return 2
+	} else {
+		return countUpStair(n-1) + countUpStair(n-2)
+	}
+}
+
+//台階數n,每次可走1-k步，有幾種走法？
+//stepRange =每次步數，1-stepRange
+func countUpStairByStepRange(n, stepRange int) int {
+	if n < 3 {
+		return n
+		//n=0,return 0
+		//n=1,只有一種,return 1
+		//n=2,有兩種,return 2
+	} else {
+		sum := 0
+		if stepRange > n {
+			stepRange = n
+		}
+		for i := 1; i <= stepRange; i++ {
+			sum += countUpStairByStepRange(n-i, stepRange)
+		}
+		return sum
+	}
+}
